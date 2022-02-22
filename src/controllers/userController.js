@@ -49,21 +49,21 @@ module.exports = {
       }
 
       /** Original Jwt.Sign Expression **/
-      const userObjJson = user.toJSON();
-      return res.send({
-        user: userObjJson,
-        token: jwtSignUser(userObjJson)
-      })
+      // const userObjJson = user.toJSON();
+      // return res.send({
+      //   user: userObjJson,
+      //   token: jwtSignUser(userObjJson)
+      // })
       /** Original Jwt.Sign Expression **/
 
       /** Loopedin SSO +Jwt.Sign Expression **/
-      // const userData = {
-      //   email: user.email,
-      //   name: user.name
-      // }
-      // const userToken = jwt.sign(userData, config.ssoToken, {algorithm: 'HS256'});
-      // const ssoRedirect = req.query.returnURL;
-      // return res.redirect(`${ssoRedirect}?token=${userToken}`); 
+      const userData = {
+        email: user.email,
+        name: user.name
+      }
+      const userToken = jwt.sign(userData, config.ssoToken, {algorithm: 'HS256'});
+      const ssoRedirect = req.query.returnURL;
+      return res.redirect(`${ssoRedirect}?token=${userToken}`); 
     } catch (error) {
       return res.status(500).send({ error: error })//'we have an error we don\'t know what to do' })
     }
