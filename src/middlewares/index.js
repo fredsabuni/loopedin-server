@@ -16,7 +16,7 @@ module.exports = {
   },
   signup: (req, res, next) => {
     const schema = Joi.object({
-      username: Joi.string().email(),
+      email: Joi.string().email(),
       password: Joi.string().regex(
         // must contain at least 1 lowercase
         // must contain at least 1 uppercase
@@ -26,12 +26,12 @@ module.exports = {
         // new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,32})")
         new RegExp('^[a-zA-Z0-9]{6,12}$')
       ),
-      fullname: Joi.string().required()
+      name: Joi.string().required()
     })
     const { error } = schema.validate(req.body)
     if (error) {
       switch (error.details[0].context.key) {
-        case 'username':
+        case 'email':
           res.status(400).send({
             error: 'this is not an email and you need to have a proper email to register'
           })
@@ -47,7 +47,7 @@ module.exports = {
             `
           })
           break;
-        case 'fullname':
+        case 'name':
           res.status(400).send({
             error: 'enter a proper fullname to register'
           })

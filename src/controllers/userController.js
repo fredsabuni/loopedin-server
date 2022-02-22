@@ -3,8 +3,7 @@ const { User } = require('../models')
 const config = require('../config/config')
 
 function jwtSignUser(user) {
-  const ONE_WEEK = 7 * 24 * 60 * 60;
-  /** Original Jwt.Sign Expression **/
+  const ONE_WEEK = 7 * 24 * 60 * 60; 
   return jwt.sign(user, config.JwtSecret, {
     expiresIn: ONE_WEEK
   }) 
@@ -28,7 +27,7 @@ module.exports = {
         token: jwtSignUser(userObjJson)
       })
     } catch (error) {
-      if (Object.keys(error.keyValue[0] === 'username')) {
+      if (Object.keys(error.keyValue[0] === 'email')) {
         return res.status(400).send({ error: 'This username already exist' })
       }
       return res.status(400).send({ error: 'something is wrong' })
@@ -36,8 +35,8 @@ module.exports = {
   },
   async login(req, res) {
     try {
-      const { username, password } = req.body;
-      const user = await User.findOne({ username })
+      const { email, password } = req.body;
+      const user = await User.findOne({ email })
       if (!user) {
         return res.status(403).send({ error: 'the login information is wrong' })
       }
@@ -49,21 +48,19 @@ module.exports = {
       }
 
       /** Original Jwt.Sign Expression **/
-      // const userObjJson = user.toJSON();
-      // return res.send({
-      //   user: userObjJson,
-      //   token: jwtSignUser(userObjJson)
-      // })
+      const userObjJson = user.toJSON();
+      return res.send({
+        user: userObjJson,
+        token: jwtSignUser(userObjJson)
+      })
       /** Original Jwt.Sign Expression **/
 
+      /** Loopedin SSO +Jwt.Sign Expression **/ 
+      // const ONE_WEEK = 7 * 24 * 60 * 60; 
+      // const userToken = jwt.sign(userObjJson, config.ssoToken, { expiresIn: ONE_WEEK }, {algorithm: 'HS256'});
+      // const ssoRedirect = req.query.returnURL; 
+      // return res.redirect(`${ssoRedirect}?token=${userToken}`); 
       /** Loopedin SSO +Jwt.Sign Expression **/
-      const userData = {
-        email: user.email,
-        name: user.name
-      }
-      const userToken = jwt.sign(userData, config.ssoToken, {algorithm: 'HS256'});
-      const ssoRedirect = req.query.returnURL;
-      return res.redirect(`${ssoRedirect}?token=${userToken}`); 
     } catch (error) {
       return res.status(500).send({ error: error })//'we have an error we don\'t know what to do' })
     }
