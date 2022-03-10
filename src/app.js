@@ -24,7 +24,7 @@ mongoose.connect(db.mongoURI, {
   useFindAndModify: true,
   useNewUrlParser: true
 }).then(() => {
-  console.log('Succefuly connected to db')
+  console.log('Succefully connected to db')
 }).catch((err) => {
   console.log('err :>> ', err);
 })

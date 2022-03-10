@@ -15,7 +15,6 @@ router.post('/signup', signup, userController.signup);
 // Route mathces api/v1/user/login
 router.post('/login', userController.login);
 
-
 // Route mathces api/v1/user/dash
 router.get('/dash', isAuthenticated, userController.findByID)
 module.exports = router
